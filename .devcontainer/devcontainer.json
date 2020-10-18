@@ -1,0 +1,41 @@
+{
+	// Name of the devcontainer
+	"name": "R6 Devcontainer GO",
+	// Add the ports your app need to expose
+	"appPort": [
+		35000
+	],
+	// Image of the container
+	//"image": "440285474687.dkr.ecr.us-east-1.amazonaws.com/internal-services/r6-devcontainer-go:0.0.2",
+	// Comment the previous line and uncomment this one if you want to build your own image
+	"dockerFile": "Dockerfile",
+	// AWS ECR Authentication with Docker
+	//"initializeCommand": "aws ecr get-login-password | docker login -u AWS --password-stdin 440285474687.dkr.ecr.us-east-1.amazonaws.com",
+	// Docker run Args
+	"runArgs": [
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		"-v",
+		"/var/run/docker.sock:/var/run/docker.sock"
+	],
+	// Mount the home folder containing all the credentials
+	// Mount unique volume to avoiding extension reinstalls on container rebuild
+	// https://code.visualstudio.com/docs/remote/containers-advanced#_avoiding-extension-reinstalls-on-container-rebuild
+	"mounts": [
+		"source=c:/project,target=/workspace,readonly,type=bind,consistency=cached",
+		"source=${localEnv:HOME},target=/home,readonly,type=bind,consistency=cached",
+		"source=r6-vscode-vol-name,target=/root/.vscode-server/extensions,type=volume",
+		// And/or for VS Code Insiders
+		"source=r6-vscode-vol-name-insiders,target=/root/.vscode-server-insiders/extensions,type=volume",
+	],
+	// VSCode settings
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"go.useLanguageServer": true
+	},
+	// VSCode Extensions
+	"extensions": [
+		"ms-vscode.go"
+	]
+}
